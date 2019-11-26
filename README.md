@@ -1,4 +1,4 @@
-# mh-battleship
+# Battleship Project
 Salvo style online game
 
 -Back end: Java, SprinBoot, Gradle
