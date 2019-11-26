@@ -1,2 +1,5 @@
 # mh-battleship
-Salvo style online game made with Java, SprinBoot, Gradle and Vue-CLI
+Salvo style online game
+
+-Back end: Java, SprinBoot, Gradle
+-Front end: Vue (CLI, Store, Router, Vuetify)
