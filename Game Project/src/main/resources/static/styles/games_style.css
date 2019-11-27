@@ -1,0 +1,247 @@
+/* Generales */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(lightcyan 35%, antiquewhite 60%);
+}
+
+header {
+  height: 10%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 1em;
+}
+
+.data {
+  display: block;
+  text-align: center;
+  width: 100%;
+  padding: 1em 0;
+}
+
+.grids {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 1em 0;
+}
+
+.container {
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+section h1 {
+  display: block;
+  text-align: center;
+  font-size: 2em;
+}
+
+form {
+  display: inline;
+  padding: 1em;
+}
+
+/* Header */
+
+#playerSpan {
+  font-weight: bolder;
+}
+
+/* Leaderboard Section */
+table {
+  margin: 0 auto;
+  padding-top: 1em;
+  width: 50%;
+  border-collapse: collapse;
+  font-size: 1.5em;
+}
+
+table,
+th,
+td {
+  border: solid 1px black;
+}
+
+.players {
+  display: inline-block;
+  margin-top: 2em;
+}
+
+.player,
+.player1 > p,
+.player2 > p {
+  display: inline-block;
+  font-size: 1.5em;
+}
+
+.name {
+  font-weight: bolder;
+}
+
+/* Grid */
+#player-grid,
+#salvos-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(11, 1fr);
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
+  border: solid 2px black;
+}
+
+.grid-line {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+}
+
+.grid-square {
+  display: inline-block;
+  position: relative;
+  border: solid 1px black;
+  background-color: cornflowerblue;
+}
+
+.grid-square > p {
+  text-align: center;
+  color: white;
+}
+
+.column-name,
+.column-num {
+  background-color: darkgray;
+}
+
+.blank {
+  background-color: black;
+}
+
+.wah {
+  background-color: cornflowerblue;
+}
+
+.piece {
+  background-color: limegreen;
+}
+
+.salvo {
+  background-color: slategrey;
+}
+
+.piece.hit {
+  background-color: crimson;
+}
+
+.shot {
+  background-color: darkblue;
+}
+
+/* Ship management */
+
+#player {
+  display: flex;
+  flex-direction: column;
+}
+
+.available-ships {
+  width: 500px;
+  display: flex;
+  height: 30px;
+}
+
+.holder {
+  float: left;
+  position: relative;
+}
+
+.image {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+}
+
+.shadow {
+  opacity: 0.5;
+  position: relative;
+  z-index: 0;
+}
+
+.holder .image {
+  width: 100%;
+}
+
+.wah .image {
+  height: 100%;
+}
+
+.space {
+  background-color: darkgreen;
+}
+
+.noSpace {
+  background-color: coral;
+}
+
+.rotate-btn {
+  height: 50%;
+  width: 50%;
+  position: relative;
+  z-index: 5;
+  background-image: url('../assets/images/rotate.png');
+}
+
+.rotated {
+  transform-origin: 10%;
+  transform: rotate(90deg);
+}
+
+/* Fleet status */
+
+#fleetStatus {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#fleetStatus > div {
+  width: 40%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#fleetStatus ul {
+  list-style: none;
+}
+
+#fleetStatus ul p {
+  font-weight: bolder;
+  font-size: 1.5em;
+}
+
+/* Botones */
+
+#gameCreator,
+#placeShips {
+  width: 50%;
+  height: 30px;
+}
+
+/*  Circumstantial */
+
+.hide {
+  display: none;
+}

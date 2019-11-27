@@ -1,0 +1,169 @@
+/*  //State changer de Game. Función única que hace todo.
+   //Para ser llamada en game view. Altamente ineficiente
+  //Esta en esta clase por tener acceso a los game players
+  //Maneja 2 estados: Estado de juego (ship, salvo, over) y del game player (placing, waiting)
+  public void stateChanger(long gpId) {
+
+    GamePlayer gamePlayerPOV = getGamePlayers().stream().filter(gp -> gp.getId() == gpId).findFirst().get();
+
+    if (getGamePlayers().size() == 1) {
+
+      this.setGameState("waiting_p2");
+
+      if (gamePlayerPOV.getShips() != null && gamePlayerPOV.getShips().size() != 0) {
+
+        gamePlayerPOV.setGamePlayerState("waiting");
+
+      } else {
+
+        gamePlayerPOV.setGamePlayerState("placing");
+
+      }
+
+    } else if (getGamePlayers().size() == 2) {
+      //Al haber 2 jugadores, se entra en estado de barcos
+      this.setGameState("ship");
+
+      GamePlayer gamePlayerP2 = getGamePlayers().stream().filter(gp -> gp.getId() != gpId).findFirst().get();
+
+      List<Long> gamePlayerIdsWhoPlacedShips = getGamePlayers().stream()
+              .filter(gp -> gp.getShips() != null && gp.getShips().size() != 0)
+              .map(GamePlayer::getId)
+              .collect(Collectors.toList());
+
+      List<Long> gamePlayerIdsWhoShot = getGamePlayers().stream()
+              .filter(gp -> gp.getSalvoes() != null)
+              .flatMap(gp -> gp.getSalvoes().stream())
+              .filter(salvo -> salvo.getTurn() == this.getTurn())
+              .map(salvo -> salvo.getGamePlayer().getId())
+              .collect(Collectors.toList());
+
+      //Ningún jugador puso sus barcos
+      if (gamePlayerIdsWhoPlacedShips.size() == 0) {
+
+        gamePlayerPOV.setGamePlayerState("placing");
+
+        //Solo un jugador del gamepuso los barcos
+      } else if (gamePlayerIdsWhoPlacedShips.size() == 1) {
+
+        //Si falta el oponente
+        if (gamePlayerIdsWhoPlacedShips.contains(gpId)) {
+
+          gamePlayerPOV.setGamePlayerState("waiting");
+
+          //Si el jugador del game view no ubico los barcos
+        } else {
+
+          gamePlayerPOV.setGamePlayerState("placing");
+
+        }
+        //Ambos jugadores ubicaron sus barcos
+      } else if (gamePlayerIdsWhoPlacedShips.size() == 2) {
+        //Ambos tienen barcos, entra en estado de salvoes
+        this.setGameState("salvo");
+
+        if (this.getTurn() == 0) {
+          this.setTurn(1);
+        }
+
+        if (gamePlayerPOV.getGamePlayerState().equals("waiting") && !gamePlayerIdsWhoShot.contains(gpId)) {
+          gamePlayerPOV.setGamePlayerState("placing");
+        }
+
+        //Ningún jugador disparo
+        if (gamePlayerIdsWhoShot.size() == 0) {
+
+          gamePlayerPOV.setGamePlayerState("placing");
+
+          //si alguien disparo
+        } else if (gamePlayerIdsWhoShot.size() == 1) {
+
+          //Si falta el oponente
+          if (gamePlayerIdsWhoShot.contains(gpId)) {
+
+            gamePlayerPOV.setGamePlayerState("waiting");
+
+            //si el jugador del game view no ubico los salvoes
+          } else {
+
+            gamePlayerPOV.setGamePlayerState("placing");
+
+          }
+
+        } else if (gamePlayerIdsWhoShot.size() == 2) {
+
+          List<String> p1ShipLocations = gamePlayerPOV.getShips().stream()
+                  .flatMap(ship -> ship.getShipLocations().stream())
+                  .collect(Collectors.toList());
+
+          List<String> p1SalvoesLocations = gamePlayerPOV.getSalvoes().stream()
+                  .flatMap(salvo -> salvo.getSalvoLocations().stream()).collect(Collectors.toList());
+
+          List<String> p2ShipLocations = gamePlayerP2.getShips().stream()
+                  .flatMap(ship -> ship.getShipLocations().stream())
+                  .collect(Collectors.toList());
+
+          List<String> p2SalvoesLocations = gamePlayerP2.getSalvoes().stream()
+                  .flatMap(salvo -> salvo.getSalvoLocations().stream())
+                  .collect(Collectors.toList());
+
+          if (p1SalvoesLocations.containsAll(p2ShipLocations) && p2SalvoesLocations.containsAll(p1ShipLocations)) {
+
+            this.setGameState("over");
+
+            gamePlayerPOV.setGamePlayerState("tie");
+
+*//*            Score p1Score = new Score(gamePlayerPOV.getPlayer(), this, 0.5 );
+
+            gamePlayerPOV.getPlayer().getScores().add(p1Score);
+
+            Score p2Score = new Score(gamePlayerP2.getPlayer(), this, 0.5 );
+
+            gamePlayerP2.getPlayer().getScores().add(p2Score);
+
+            this.setScores(Arrays.asList(p1Score, p2Score));*//*
+
+          } else if (p1SalvoesLocations.containsAll(p2ShipLocations)) {
+
+            this.setGameState("over");
+
+            gamePlayerPOV.setGamePlayerState("win");
+
+*//*            Score p1Score = new Score(gamePlayerPOV.getPlayer(), this, 1.0 );
+
+            gamePlayerPOV.getPlayer().getScores().add(p1Score);
+
+            Score p2Score = new Score(gamePlayerP2.getPlayer(), this, 0.0 );
+
+            gamePlayerP2.getPlayer().getScores().add(p2Score);
+
+            this.setScores(Arrays.asList(p1Score, p2Score));*//*
+
+          } else if (p2SalvoesLocations.containsAll(p1ShipLocations)) {
+
+            this.setGameState("over");
+
+            gamePlayerPOV.setGamePlayerState("loss");
+
+*//*            Score p1Score = new Score(gamePlayerPOV.getPlayer(), this, 0.0 );
+
+            gamePlayerPOV.getPlayer().getScores().add(p1Score);
+
+            Score p2Score = new Score(gamePlayerP2.getPlayer(), this, 1.0 );
+
+            gamePlayerP2.getPlayer().getScores().add(p2Score);
+
+            this.setScores(Arrays.asList(p1Score, p2Score));*//*
+
+          } else {
+
+            this.setTurn(this.getTurn() + 1);
+
+          }
+
+        }
+
+      }
+    }
+
+  }*/
