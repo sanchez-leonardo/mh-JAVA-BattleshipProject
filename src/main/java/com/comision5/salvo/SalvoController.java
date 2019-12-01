@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = {"*"}, allowedHeaders = {"Access-Control-Allow-Headers"})
 @RestController
+@CrossOrigin(origins = {"https://mh-battleshipgame.herokuapp.com"}, allowedHeaders = "*")
 @RequestMapping("/api")
 public class SalvoController {
 
