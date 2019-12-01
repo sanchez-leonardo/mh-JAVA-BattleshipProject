@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = {"https://mh-battleshipgame.herokuapp.com"}, allowedHeaders = "*")
 @RequestMapping("/api")
 public class SalvoController {
 
