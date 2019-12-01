@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 
 @RestController
-@CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/")
 @RequestMapping("/api")
 public class SalvoController {
 
@@ -42,12 +41,14 @@ public class SalvoController {
   private PasswordEncoder passwordEncoder;
 
   // Llamado para crear la tabla de puntajes
+  @CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/**")
   @GetMapping("/leaderboard")
   public List<Object> lederboardInfo() {
     return playerRepo.findAll().stream().map(Player::leaderBoardDTO).collect(Collectors.toList());
   }
 
   // Info general de todos los juegos
+  @CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/**")
   @GetMapping("/games")
   public Map<String, Object> gamesInfo(Authentication auth) {
 
@@ -61,6 +62,7 @@ public class SalvoController {
 
   // Método de estado de juego
   // Simplificaría pedidos de game view según el estado
+  @CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/**")
   @GetMapping("/game_state/{gpId}")
   public Map<String, Object> getGameState(@PathVariable long gpId) {
 
@@ -76,6 +78,7 @@ public class SalvoController {
   }
 
   // Game player específico
+  @CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/**")
   @GetMapping("/game_view/{gpId}")
   public ResponseEntity<Object> gameView(@PathVariable long gpId, Authentication auth) {
 
@@ -101,6 +104,7 @@ public class SalvoController {
   }
 
   // Registro de usuario
+  @CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/**")
   @PostMapping(path = "/players")
   public ResponseEntity<Object> register(@RequestParam String userName, @RequestParam String password) {
 
@@ -121,6 +125,7 @@ public class SalvoController {
   }
 
   // Creación de juego
+  @CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/**")
   @PostMapping(path = "/games")
   public ResponseEntity<Object> createGame(Authentication auth) {
 
@@ -154,6 +159,7 @@ public class SalvoController {
   }
 
   // Entrada a juego existente
+  @CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/**")
   @PostMapping(path = "/game/{gameId}/players")
   public ResponseEntity<Object> joinGame(@PathVariable Long gameId, Authentication auth) {
 
@@ -203,6 +209,7 @@ public class SalvoController {
   }
 
   // Creación de lista de barcos de gamePlayer
+  @CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/**")
   @PostMapping(path = "/games/players/{gpId}/ships")
   public ResponseEntity<Object> setGamePlayerShips(@PathVariable Long gpId, @RequestBody List<Ship> ships,
       Authentication auth) {
@@ -262,6 +269,7 @@ public class SalvoController {
   }
 
   // Creación de lista de salvoes de gamePlayer
+  @CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/**")
   @PostMapping(path = "/games/players/{gpId}/salvoes")
   public ResponseEntity<Object> setGamePlayerSalvoes(@PathVariable Long gpId, @RequestBody List<String> salvoes,
       Authentication auth) {
