@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "*", exposedHeaders = "Access-Control-Allow-Origin" )
+@CrossOrigin(origins = {"*"}, allowedHeaders = {"Access-Control-Allow-Origin"})
 @RestController
 @RequestMapping("/api")
 public class SalvoController {
