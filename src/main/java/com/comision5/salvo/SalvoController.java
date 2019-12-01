@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class SalvoController {
@@ -39,14 +40,13 @@ public class SalvoController {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
-
-  //Llamado para crear la tabla de puntajes
+  // Llamado para crear la tabla de puntajes
   @GetMapping("/leaderboard")
   public List<Object> lederboardInfo() {
     return playerRepo.findAll().stream().map(Player::leaderBoardDTO).collect(Collectors.toList());
   }
 
-  //Info general de todos los juegos
+  // Info general de todos los juegos
   @GetMapping("/games")
   public Map<String, Object> gamesInfo(Authentication auth) {
 
@@ -58,8 +58,8 @@ public class SalvoController {
     return gamesInfoDTO;
   }
 
-  //Método de estado de juego
-  //Simplificaría pedidos de game view según el estado
+  // Método de estado de juego
+  // Simplificaría pedidos de game view según el estado
   @GetMapping("/game_state/{gpId}")
   public Map<String, Object> getGameState(@PathVariable long gpId) {
 
@@ -71,11 +71,10 @@ public class SalvoController {
     gameStateDTO.put("turn", gamePlayer.getGame().getTurn());
     gameStateDTO.put("game_player_state", gamePlayer.getGamePlayerState());
 
-
     return gameStateDTO;
   }
 
-  //Game player específico
+  // Game player específico
   @GetMapping("/game_view/{gpId}")
   public ResponseEntity<Object> gameView(@PathVariable long gpId, Authentication auth) {
 
@@ -100,10 +99,9 @@ public class SalvoController {
     }
   }
 
-  //Registro de usuario
+  // Registro de usuario
   @PostMapping(path = "/players")
-  public ResponseEntity<Object> register(
-          @RequestParam String userName, @RequestParam String password) {
+  public ResponseEntity<Object> register(@RequestParam String userName, @RequestParam String password) {
 
     if (userName.isEmpty() || password.isEmpty()) {
 
@@ -121,7 +119,7 @@ public class SalvoController {
     }
   }
 
-  //Creación de juego
+  // Creación de juego
   @PostMapping(path = "/games")
   public ResponseEntity<Object> createGame(Authentication auth) {
 
@@ -138,11 +136,11 @@ public class SalvoController {
       GamePlayer aNewGP = new GamePlayer(thePlayer, newGame);
       newGame.setGamePlayers(Collections.singletonList(aNewGP));
       thePlayer.addGamePlayer(aNewGP);
-      //cambio de estado
+      // cambio de estado
       newGame.gameStateChanger();
       aNewGP.gamePlayerStateChanger();
 
-      //Actualización y guardado de entidades
+      // Actualización y guardado de entidades
       gameRepo.save(newGame);
 
       gamePlayerRepo.save(aNewGP);
@@ -154,7 +152,7 @@ public class SalvoController {
 
   }
 
-  //Entrada a juego existente
+  // Entrada a juego existente
   @PostMapping(path = "/game/{gameId}/players")
   public ResponseEntity<Object> joinGame(@PathVariable Long gameId, Authentication auth) {
 
@@ -186,11 +184,11 @@ public class SalvoController {
 
       thePlayer.addGamePlayer(aNewGP);
 
-      //Cambio de estado
+      // Cambio de estado
       existingGame.gameStateChanger();
       aNewGP.gamePlayerStateChanger();
 
-      //Actualización y guardado de entidades
+      // Actualización y guardado de entidades
       gameRepo.save(existingGame);
 
       gamePlayerRepo.save(aNewGP);
@@ -203,9 +201,10 @@ public class SalvoController {
 
   }
 
-  //Creación de lista de barcos de gamePlayer
+  // Creación de lista de barcos de gamePlayer
   @PostMapping(path = "/games/players/{gpId}/ships")
-  public ResponseEntity<Object> setGamePlayerShips(@PathVariable Long gpId, @RequestBody List<Ship> ships, Authentication auth) {
+  public ResponseEntity<Object> setGamePlayerShips(@PathVariable Long gpId, @RequestBody List<Ship> ships,
+      Authentication auth) {
 
     if (isGuest(auth)) {
 
@@ -245,11 +244,11 @@ public class SalvoController {
 
       gamePlayer.setShips(shipList);
 
-      //Actualización de estados
+      // Actualización de estados
       theGame.gameStateChanger();
       theGame.gamePlayerUpdater();
 
-      //Actualización y guardado de entidades
+      // Actualización y guardado de entidades
       gameRepo.save(theGame);
 
       shipRepo.saveAll(shipList);
@@ -261,11 +260,10 @@ public class SalvoController {
     }
   }
 
-  //Creación de lista de salvoes de gamePlayer
+  // Creación de lista de salvoes de gamePlayer
   @PostMapping(path = "/games/players/{gpId}/salvoes")
-  public ResponseEntity<Object> setGamePlayerSalvoes(
-          @PathVariable Long gpId,
-          @RequestBody List<String> salvoes, Authentication auth) {
+  public ResponseEntity<Object> setGamePlayerSalvoes(@PathVariable Long gpId, @RequestBody List<String> salvoes,
+      Authentication auth) {
 
     if (isGuest(auth)) {
 
@@ -284,7 +282,7 @@ public class SalvoController {
       return new ResponseEntity<>("too many shots", HttpStatus.FORBIDDEN);
 
     } else {
-      //Usa el estado de juego y game player para setear los salvos
+      // Usa el estado de juego y game player para setear los salvos
       GamePlayer gamePlayerP1 = gamePlayerRepo.findById(gpId).get();
 
       Game theGame = gameRepo.findById(gamePlayerP1.getGame().getId()).get();
@@ -295,14 +293,14 @@ public class SalvoController {
 
         gamePlayerP1.addSalvo(newSalvo);
 
-        //Actualización de estado de game players
+        // Actualización de estado de game players
         theGame.gamePlayerUpdater();
 
         theGame.turnAdvancer(gpId);
 
         theGame.scoreSetter();
 
-        //Actualización y guardado de entidades
+        // Actualización y guardado de entidades
         salvoRepo.save(newSalvo);
 
         gamePlayerRepo.save(gamePlayerP1);
@@ -328,32 +326,31 @@ public class SalvoController {
 
   }
 
-  //AUX
-  //Retorna true si no es usuario autentificado o es annonymous
+  // AUX
+  // Retorna true si no es usuario autentificado o es annonymous
   private boolean isGuest(Authentication auth) {
     return auth == null || auth instanceof AnonymousAuthenticationToken;
   }
 
-  //Boolean si el player id es igual al id del player en el gameplayer pedido
+  // Boolean si el player id es igual al id del player en el gameplayer pedido
   private boolean samePlayer(Long id, Authentication auth) {
     return gamePlayerRepo.findById(id).get().getPlayer().getId() == playerRepo.findByUserName(auth.getName()).getId();
   }
 
-  //Boolean para comprobar que un game no tiene al jugador que quiere unirse
+  // Boolean para comprobar que un game no tiene al jugador que quiere unirse
   private boolean isAlreadyPlayer(Game game, Player player) {
 
-    return game.getGamePlayers().stream()
-            .map(gp -> gp.getPlayer().getId()).collect(Collectors.toList())
-            .contains(player.getId());
+    return game.getGamePlayers().stream().map(gp -> gp.getPlayer().getId()).collect(Collectors.toList())
+        .contains(player.getId());
 
   }
 
-  //Boolean para comprobar si existe el game player
+  // Boolean para comprobar si existe el game player
   private boolean gamePlayerExists(Long id) {
     return gamePlayerRepo.findById(id).isPresent();
   }
 
-  //Retorna un objeto simple de 1 campo
+  // Retorna un objeto simple de 1 campo
   private Map<String, Object> responseObject(String key, Object value) {
 
     Map<String, Object> responseObj = new LinkedHashMap<>();
@@ -363,7 +360,7 @@ public class SalvoController {
     return responseObj;
   }
 
-  //Retorna el optional de game. Es para simplificar comparaciones
+  // Retorna el optional de game. Es para simplificar comparaciones
   private Optional<Game> optGame(Long id) {
     return gameRepo.findById(id);
   }
