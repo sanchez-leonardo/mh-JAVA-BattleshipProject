@@ -14,8 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/")
 @RequestMapping("/api")
 public class SalvoController {
 
@@ -41,14 +42,12 @@ public class SalvoController {
   private PasswordEncoder passwordEncoder;
 
   // Llamado para crear la tabla de puntajes
-  @CrossOrigin
   @GetMapping("/leaderboard")
   public List<Object> lederboardInfo() {
     return playerRepo.findAll().stream().map(Player::leaderBoardDTO).collect(Collectors.toList());
   }
 
   // Info general de todos los juegos
-  @CrossOrigin
   @GetMapping("/games")
   public Map<String, Object> gamesInfo(Authentication auth) {
 
@@ -62,7 +61,6 @@ public class SalvoController {
 
   // Método de estado de juego
   // Simplificaría pedidos de game view según el estado
-  @CrossOrigin
   @GetMapping("/game_state/{gpId}")
   public Map<String, Object> getGameState(@PathVariable long gpId) {
 
@@ -78,7 +76,6 @@ public class SalvoController {
   }
 
   // Game player específico
-  @CrossOrigin
   @GetMapping("/game_view/{gpId}")
   public ResponseEntity<Object> gameView(@PathVariable long gpId, Authentication auth) {
 
@@ -104,7 +101,6 @@ public class SalvoController {
   }
 
   // Registro de usuario
-  @CrossOrigin
   @PostMapping(path = "/players")
   public ResponseEntity<Object> register(@RequestParam String userName, @RequestParam String password) {
 
@@ -125,7 +121,6 @@ public class SalvoController {
   }
 
   // Creación de juego
-  @CrossOrigin
   @PostMapping(path = "/games")
   public ResponseEntity<Object> createGame(Authentication auth) {
 
@@ -159,7 +154,6 @@ public class SalvoController {
   }
 
   // Entrada a juego existente
-  @CrossOrigin
   @PostMapping(path = "/game/{gameId}/players")
   public ResponseEntity<Object> joinGame(@PathVariable Long gameId, Authentication auth) {
 
@@ -209,10 +203,9 @@ public class SalvoController {
   }
 
   // Creación de lista de barcos de gamePlayer
-  @CrossOrigin
   @PostMapping(path = "/games/players/{gpId}/ships")
   public ResponseEntity<Object> setGamePlayerShips(@PathVariable Long gpId, @RequestBody List<Ship> ships,
-                                                   Authentication auth) {
+      Authentication auth) {
 
     if (isGuest(auth)) {
 
@@ -269,10 +262,9 @@ public class SalvoController {
   }
 
   // Creación de lista de salvoes de gamePlayer
-  @CrossOrigin
   @PostMapping(path = "/games/players/{gpId}/salvoes")
   public ResponseEntity<Object> setGamePlayerSalvoes(@PathVariable Long gpId, @RequestBody List<String> salvoes,
-                                                     Authentication auth) {
+      Authentication auth) {
 
     if (isGuest(auth)) {
 
@@ -350,7 +342,7 @@ public class SalvoController {
   private boolean isAlreadyPlayer(Game game, Player player) {
 
     return game.getGamePlayers().stream().map(gp -> gp.getPlayer().getId()).collect(Collectors.toList())
-            .contains(player.getId());
+        .contains(player.getId());
 
   }
 
