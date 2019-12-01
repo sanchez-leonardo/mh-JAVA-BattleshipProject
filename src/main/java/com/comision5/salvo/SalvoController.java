@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/", methods = { RequestMethod.GET, RequestMethod.POST })
 @RestController
+@CrossOrigin(origins = "https://mh-battleshipgame.herokuapp.com/")
 @RequestMapping("/api")
 public class SalvoController {
 
