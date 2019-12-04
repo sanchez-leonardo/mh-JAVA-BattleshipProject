@@ -289,7 +289,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     configuration.setAllowedOrigins(Collections.singletonList("https://mh-battleshipgame.herokuapp.com"));
     configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
 //    configuration.setAllowCredentials(true);
-    configuration.setAllowedHeaders(Arrays.asList("Content-Type"));
+//    configuration.setAllowedHeaders(Arrays.asList("Content-Type"));
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
