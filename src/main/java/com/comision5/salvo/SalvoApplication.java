@@ -21,15 +21,16 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @SpringBootApplication
@@ -240,7 +241,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()
             .antMatchers("/rest/**").denyAll()
             .antMatchers("/api/game_view/**",
-                    "/api/game/**/players", "/api/games/players/**/ships").hasAuthority("USER") // Removida /api/games
+                    "/api/game/**/players", "/api/games/players/**/ships").hasAuthority("USER")
             .antMatchers("/**").permitAll()
             .anyRequest().authenticated();
 
@@ -257,6 +258,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     //Cors
     http.cors();
+
 
     // turn off checking for CSRF tokens
     http.csrf().disable();
@@ -281,6 +283,19 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
   }
 
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    final CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Collections.singletonList("https://mh-battleshipgame.herokuapp.com"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+//    configuration.setAllowCredentials(true);
+    configuration.setAllowedHeaders(Arrays.asList("Content-Type"));
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
+
+
   private void clearAuthenticationAttributes(HttpServletRequest request) {
     HttpSession session = request.getSession(false);
     if (session != null) {
@@ -288,16 +303,4 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
   }
 
-  @Component
-  public class CorsFilter implements Filter {
-
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-      HttpServletResponse response = (HttpServletResponse) res;
-      response.setHeader("Access-Control-Allow-Origin", "*");
-      response.setHeader("Access-Control-Allow-Methods", "POST, GET");
-      response.setHeader("Access-Control-Max-Age", "3600");
-      response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-      chain.doFilter(req, res);
-    }
-  }
 }
