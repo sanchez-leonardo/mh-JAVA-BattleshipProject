@@ -24,7 +24,6 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -260,7 +259,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     //Cors
     http.cors();
 
-
     // turn off checking for CSRF tokens
     http.csrf().disable();
 
@@ -284,18 +282,16 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
   }
 
+  @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     final CorsConfiguration configuration = new CorsConfiguration();
-
+//    configuration.applyPermitDefaultValues();
     configuration.addAllowedOrigin("https://mh-battleshipgame.herokuapp.com");
     configuration.addAllowedMethod("*");
-    configuration.addAllowedHeader("*");
-    configuration.addExposedHeader("*");
+    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
     configuration.setAllowCredentials(true);
-
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
-
     return source;
   }
 
