@@ -283,16 +283,17 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
   }
 
-//  @Bean
-//  public CorsConfigurationSource corsConfigurationSource() {
-//    final CorsConfiguration configuration = new CorsConfiguration();
-//    configuration.setAllowedOrigins(Collections.singletonList("https://mh-battleshipgame.herokuapp.com"));
-//    configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
-//    configuration.setAllowCredentials(true);
-//    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//    source.registerCorsConfiguration("/**", configuration);
-//    return source;
-//  }
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    final CorsConfiguration configuration = new CorsConfiguration();
+    configuration.setAllowedOrigins(Collections.singletonList("https://mh-battleshipgame.herokuapp.com"));
+    configuration.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept"));
+    configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+    configuration.setAllowCredentials(true);
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
+  }
 
 
   private void clearAuthenticationAttributes(HttpServletRequest request) {
