@@ -285,10 +285,10 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     final CorsConfiguration configuration = new CorsConfiguration();
-//    configuration.applyPermitDefaultValues();
+   configuration.applyPermitDefaultValues();
     configuration.addAllowedOrigin("https://mh-battleshipgame.herokuapp.com");
     configuration.addAllowedMethod("*");
-    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+    configuration.addAllowedHeader("*");
     configuration.setAllowCredentials(true);
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
