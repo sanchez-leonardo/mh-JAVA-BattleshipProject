@@ -23,6 +23,8 @@ public class Ship {
   @Column(name = "ship_locations")
   private List<String> shipLocations;
 
+  public Ship(){}
+
   public Ship(String shipType, List<String> shipLocations, GamePlayer gamePlayer) {
     this.shipType = shipType;
     this.shipLocations = shipLocations;
